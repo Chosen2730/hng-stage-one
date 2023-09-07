@@ -2,8 +2,9 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 require("dotenv").config();
+app.use(cors());
+app.use(express.json());
 const port = 3000 || process.env.PORT;
-app.use(cors);
 
 app.get("/", (req, res) => {
   const { slack_name, track } = req.query;
