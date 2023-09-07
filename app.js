@@ -6,7 +6,7 @@ app.use(cors());
 app.use(express.json());
 const port = 3000 || process.env.PORT;
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   const { slack_name, track } = req.query;
 
   const days = [
@@ -38,4 +38,6 @@ app.get("/", (req, res) => {
     throw new Error();
   }
 });
+
+app.get("/", (req, res) => res.send("HNG Stage One Backend Task"));
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
