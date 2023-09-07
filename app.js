@@ -23,57 +23,36 @@ app.get("/api", (req, res) => {
 
   const today = date.getDay();
 
-  // current_utc_time = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ");
-
-  // const getTime = () => {
-  //   const currMin = date.getUTCMinutes();
-  //   const randomOffset = Math.floor(Math.random() * 4 - 2) * 60000;
-  //   const adDate = new Date(date.getTime() + randomOffset);
-  //   const div = randomOffset / 60000;
-  //   const adMin = (60 + (currMin + div)) % 60;
-  //   const formattedUTC = `${adDate.getUTCHours()}:${adMin
-  //     .toString()
-  //     .padStart(2, "0")}`;
-
-  //   return formattedUTC;
-  // };
-
   function getCurrentUTCWithValidation() {
-    // Get the current UTC time
-    const currentUTC = new Date();
+    const currentDate = new Date();
+    const currentUTC = new Date(currentDate.toISOString());
 
-    // Get the desired time range for validation (+/- 2 minutes)
-    const desiredMinUTC = new Date();
-    desiredMinUTC.setUTCMinutes(desiredMinUTC.getUTCMinutes() - 2);
+    // Create a new Date object for UTC time with a +/-2 minute range
+    const minUTC = new Date(currentUTC);
+    minUTC.setMinutes(currentUTC.getMinutes() - 2);
 
-    const desiredMaxUTC = new Date();
-    desiredMaxUTC.setUTCMinutes(desiredMaxUTC.getUTCMinutes() + 2);
+    const maxUTC = new Date(currentUTC);
+    maxUTC.setMinutes(currentUTC.getMinutes() + 2);
 
-    // Check if the current UTC time is within the desired range
-    const isValid = currentUTC >= desiredMinUTC && currentUTC <= desiredMaxUTC;
-
-    // Format the current UTC time as a string
-    const formattedCurrentUTC = currentUTC.toISOString();
-
-    // Return the current UTC time and validation status
-    return {
-      currentUTC: formattedCurrentUTC,
-      isValid: isValid,
-    };
+    // Validate the current UTC time is within the range
+    if (currentUTC >= minUTC && currentUTC <= maxUTC) {
+      // Format the current UTC time as "YYYY-MM-DDTHH:MM:SSZ"
+      const formattedUTC = currentUTC.toISOString().slice(0, -1) + "Z";
+      return formattedUTC;
+    } else {
+      return "UTC time is not within the valid range.";
+    }
   }
 
-  // Call the function to get the current UTC time with validation
-  const result = getCurrentUTCWithValidation();
-
-  // console.log("Current UTC Time:", result.currentUTC);
-  // console.log("Is Valid:", result.isValid);
+  // Call the function to get and validate the current UTC time
+  const currentUTC = getCurrentUTCWithValidation();
 
   try {
     res.status(200).json({
       slack_name,
       track,
       current_day: days[today],
-      utc_time: result.currentUTC,
+      utc_time: currentUTC.slice(0, 19) + "Z",
       github_file_url:
         "https://github.com/Chosen2730/hng-stage-one/blob/main/app.js",
       github_repo_url: "https://github.com/Chosen2730/hng-stage-one",
