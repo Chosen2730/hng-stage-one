@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 require("dotenv").config();
 const port = 3000 || process.env.PORT;
+app.use(cors);
 
 app.get("/", (req, res) => {
   const { slack_name, track } = req.query;
@@ -27,7 +28,8 @@ app.get("/", (req, res) => {
       track,
       current_day: days[today],
       utc_time: date,
-      github_file_url: "https://github.com/Chosen2730/hng-stage-one",
+      github_file_url:
+        "https://github.com/Chosen2730/hng-stage-one/blob/main/app.js",
       github_repo_url: "https://github.com/Chosen2730/hng-stage-one",
       status_code: 200,
     });
