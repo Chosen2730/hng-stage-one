@@ -23,12 +23,14 @@ app.get("/api", (req, res) => {
 
   const today = date.getDay();
 
+  // current_utc_time = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ");
+
   try {
     res.status(200).json({
       slack_name,
       track,
       current_day: days[today],
-      utc_time: date,
+      utc_time: date.toISOString().slice(0, -1),
       github_file_url:
         "https://github.com/Chosen2730/hng-stage-one/blob/main/app.js",
       github_repo_url: "https://github.com/Chosen2730/hng-stage-one",
